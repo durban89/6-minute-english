@@ -64,6 +64,8 @@ pnpm dev
 - `hugo/layouts/6-minute-english/list.html` — 列表 layout
 - `hugo/layouts/6-minute-english/single.html` — 详情 layout
 - `hugo/layouts/shortcodes/audio.html` — `audio` shortcode（page resource 播放）
+- `hugo/static/css/6min.css` — Tailwind CSS v4 编译出的自包含样式（含暗色模式、prose 样式）
+- `hugo/static/robots.txt` — 阻止搜索引擎收录 `/6-minute-english/`（可选）
 
 ### 放置位置
 
@@ -74,6 +76,8 @@ hugo/content/6-minute-english/_index.md  ->  <site>/content/6-minute-english/_in
 hugo/layouts/6-minute-english/list.html   ->  <site>/layouts/6-minute-english/list.html
 hugo/layouts/6-minute-english/single.html ->  <site>/layouts/6-minute-english/single.html
 hugo/layouts/shortcodes/audio.html        ->  <site>/layouts/shortcodes/audio.html
+hugo/static/css/6min.css                 ->  <site>/static/css/6min.css
+hugo/static/robots.txt                   ->  <site>/static/robots.txt  （可选）
 ```
 
 然后每天把脚本生成的 `tmp/<ep-YYMMDD>/` 整个复制到 `<site>/content/6-minute-english/`。
