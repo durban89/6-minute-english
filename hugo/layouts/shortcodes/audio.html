@@ -1,0 +1,11 @@
+{{- $src := .Get "src" -}}
+{{- $class := .Get "class" -}}
+{{- $audio := .Page.Resources.GetMatch $src -}}
+<audio class="{{ $class }}" controls preload="metadata">
+  {{- if $audio }}
+  <source src="{{ $audio.RelPermalink }}" type="{{ $audio.MediaType.Type }}">
+  {{- else }}
+  <source src="{{ $src | relURL }}" type="audio/mpeg">
+  {{- end }}
+  Your browser does not support the audio element.
+</audio>
