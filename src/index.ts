@@ -57,6 +57,15 @@ async function main(): Promise<void> {
   console.log(`  meta.json`);
 }
 
+function slugify(input: string): string {
+  return input
+    .toLowerCase()
+    .trim()
+    .replace(/['’`]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 function buildIndexMd(episode: {
   title: string;
   date: string;
@@ -64,6 +73,11 @@ function buildIndexMd(episode: {
   originalAddress: string;
   transcriptMarkdown: string;
 }): string {
+  const baseSlug = slugify(episode.title) || `ep-${episode.episodeCode}`;
+  const slug = baseSlug.endsWith(`-${episode.episodeCode}`)
+    ? baseSlug
+    : `${baseSlug}-${episode.episodeCode}`;
+
   const frontMatter = [
     "---",
     `title: ${JSON.stringify(episode.title)}`,
@@ -72,7 +86,7 @@ function buildIndexMd(episode: {
     `draft: false`,
     `categories: ["English", "6 Minute English"]`,
     `tags: ["bbc", "listening", "vocabulary", "6-minute-english"]`,
-    `slug: ${JSON.stringify(`ep-${episode.episodeCode}`)}`,
+    `slug: ${JSON.stringify(slug)}`,
     `episode_id: ${JSON.stringify(episode.episodeCode)}`,
     `original_address: ${JSON.stringify(episode.originalAddress)}`,
     `audio: "audio.mp3"`,
