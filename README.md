@@ -24,12 +24,14 @@
 
 ```bash
 pnpm install
-pnpm build && pnpm start
-# 或
+pnpm start        # 会先 build（tsc + 编译 CSS）再运行，无需手动 build
+# 或（开发模式，直接跑 TS，不生成 dist）
 pnpm dev
 ```
 
 脚本运行后，输出原始地址及保存路径，例如：`tmp/ep-261008/`
+
+> `pnpm install` 会安装依赖并生成 CSS；`pnpm start` 会先执行 `build`（生成 `dist/`）再运行，因此新机器拉取代码后可直接 `pnpm install && pnpm start`。
 
 ## Hugo 集成
 

@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc && pnpm build:css",
     "build:css": "tailwindcss -i ./tailwind/input.css -o ./hugo/static/css/6min.css --minify",
-    "start": "node dist/index.js",
+    "start": "pnpm build && node dist/index.js",
     "dev": "tsx src/index.ts"
   },
   "engines": {
