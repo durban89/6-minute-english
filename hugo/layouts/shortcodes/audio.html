@@ -1,5 +1,5 @@
 {{- $src := .Get "src" -}}
-{{- $class := .Get "class" -}}
+{{- $class := .Get "class" | default "w-full my-4" -}}
 {{- $audio := .Page.Resources.GetMatch $src -}}
 <audio class="{{ $class }}" controls preload="metadata">
   {{- if $audio }}

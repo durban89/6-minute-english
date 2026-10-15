@@ -1,0 +1,6 @@
+@import "tailwindcss" source(none);
+@plugin "@tailwindcss/typography";
+
+@source "../hugo/layouts";
+
+@custom-variant dark (&:where(.sixmin-dark, .sixmin-dark *));

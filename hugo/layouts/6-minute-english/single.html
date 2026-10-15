@@ -3,32 +3,62 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
   <title>{{ .Title }} | {{ .Site.Title }}</title>
-  <meta name="description" content="{{ .Title }}">
-  <style>
-    .six-minute-english { max-width: 760px; margin: 0 auto; padding: 2rem; line-height: 1.7; }
-    .six-minute-english header h1 { margin: 0 0 .5rem 0; }
-    .six-minute-english time { color: #666; }
-    .six-minute-english audio { width: 100%; margin: 1rem 0; }
-    .six-minute-english .back { display: inline-block; margin-bottom: 1rem; }
-  </style>
+  <link rel="stylesheet" href="{{ "css/6min.css" | relURL }}">
+  <script>
+    (function () {
+      try {
+        var k = "sixmin-theme";
+        var root = document.documentElement;
+        var s = localStorage.getItem(k);
+        var d = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        if (s === "dark" || (!s && d)) {
+          root.classList.add("sixmin-dark");
+        }
+      } catch (e) {}
+    })();
+  </script>
 </head>
-<body>
-  <article class="six-minute-english">
-    <a class="back" href="{{ "/6-minute-english/" | relURL }}">&larr; 6 Minute English</a>
-    <header>
-      <h1>{{ .Title }}</h1>
-      {{ with .Date }}<time datetime="{{ .Format "2006-01-02" }}">{{ .Format "2 January 2006" }}</time>{{ end }}
-      {{ with .Params.original_address }}<p><a href="{{ . }}" target="_blank" rel="noopener">BBC original</a></p>{{ end }}
-      {{ with .Resources.GetMatch "transcript.pdf" }}
-      <p><a href="{{ .RelPermalink }}" download>Download transcript (PDF)</a></p>
-      {{ end }}
-      {{ with .Resources.GetMatch "transcript.txt" }}
-      <p><a href="{{ .RelPermalink }}" download>Download transcript (TXT)</a></p>
-      {{ end }}
-    </header>
+<body class="min-h-screen bg-slate-50 text-slate-800 antialiased sixmin-dark:bg-slate-950 sixmin-dark:text-slate-100">
+  <div class="mx-auto max-w-3xl px-6 py-10">
+    <div class="mb-6 flex items-center justify-between">
+      <a href="{{ "/6-minute-english/" | relURL }}" class="text-sm text-slate-500 transition hover:text-slate-800 sixmin-dark:text-slate-400 sixmin-dark:hover:text-slate-100">&larr; 6 Minute English</a>
+      <button type="button" data-sixmin-toggle
+        class="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm shadow-sm transition hover:bg-slate-100 sixmin-dark:border-slate-700 sixmin-dark:bg-slate-800 sixmin-dark:hover:bg-slate-700">
+        <span class="inline sixmin-dark:hidden">🌙 Dark</span>
+        <span class="hidden sixmin-dark:inline">☀️ Light</span>
+      </button>
+    </div>
 
-    {{ .Content }}
-  </article>
+    <article>
+      <header class="mb-6">
+        <h1 class="text-2xl font-bold tracking-tight">{{ .Title }}</h1>
+        <div class="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-500 sixmin-dark:text-slate-400">
+          {{ with .Date }}<time datetime="{{ .Format "2006-01-02" }}">{{ .Format "2 January 2006" }}</time>{{ end }}
+          {{ with .Params.original_address }}<a class="hover:underline" href="{{ . }}" target="_blank" rel="noopener">BBC 原页</a>{{ end }}
+        </div>
+        <div class="mt-4 flex flex-wrap gap-2">
+          {{ with .Resources.GetMatch "transcript.pdf" }}<a class="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm shadow-sm transition hover:bg-slate-100 sixmin-dark:border-slate-700 sixmin-dark:bg-slate-800 sixmin-dark:hover:bg-slate-700" href="{{ .RelPermalink }}" download>Transcript PDF</a>{{ end }}
+          {{ with .Resources.GetMatch "transcript.txt" }}<a class="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm shadow-sm transition hover:bg-slate-100 sixmin-dark:border-slate-700 sixmin-dark:bg-slate-800 sixmin-dark:hover:bg-slate-700" href="{{ .RelPermalink }}" download>Transcript TXT</a>{{ end }}
+        </div>
+      </header>
+
+      <div class="prose prose-slate max-w-none sixmin-dark:prose-invert">
+        {{ .Content }}
+      </div>
+    </article>
+  </div>
+
+  <script>
+    (function () {
+      document.addEventListener("click", function (e) {
+        var t = e.target.closest("[data-sixmin-toggle]");
+        if (!t) return;
+        var isDark = document.documentElement.classList.toggle("sixmin-dark");
+        try { localStorage.setItem("sixmin-theme", isDark ? "dark" : "light"); } catch (e) {}
+      });
+    })();
+  </script>
 </body>
 </html>
