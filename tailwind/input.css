@@ -3,4 +3,4 @@
 
 @source "../hugo/layouts";
 
-@custom-variant dark (&:where(.sixmin-dark, .sixmin-dark *));
+@custom-variant sixmin-dark (&:where(.sixmin-dark, .sixmin-dark *));
