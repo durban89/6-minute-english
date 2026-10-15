@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.Language.Lang | default "en" }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ .Title }} | {{ .Site.Title }}</title>
+  <meta name="description" content="{{ .Title }}">
+  <style>
+    .six-minute-english-list { max-width: 760px; margin: 0 auto; padding: 2rem; line-height: 1.6; }
+    .six-minute-english-list ul { list-style: none; padding: 0; margin: 0; }
+    .six-minute-english-list li { padding: 1rem 0; border-bottom: 1px solid #eee; }
+    .six-minute-english-list a.title { font-size: 1.15rem; font-weight: 600; text-decoration: none; }
+    .six-minute-english-list time { display: block; color: #666; font-size: .9rem; margin-top: .25rem; }
+  </style>
+</head>
+<body>
+  <main class="six-minute-english-list">
+    <h1>{{ .Title }}</h1>
+    {{ .Content }}
+
+    <ul>
+      {{ range .Pages.ByDate.Reverse }}
+      <li>
+        <a class="title" href="{{ .RelPermalink }}">{{ .Title }}</a>
+        {{ with .Date }}<time datetime="{{ .Format "2006-01-02" }}">{{ .Format "2 January 2006" }}</time>{{ end }}
+      </li>
+      {{ end }}
+    </ul>
+  </main>
+</body>
+</html>

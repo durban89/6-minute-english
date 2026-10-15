@@ -10,12 +10,12 @@
     .six-minute-english header h1 { margin: 0 0 .5rem 0; }
     .six-minute-english time { color: #666; }
     .six-minute-english audio { width: 100%; margin: 1rem 0; }
-    .six-minute-english .transcript { margin: 2rem 0; }
-    pre.transcript-text { white-space: pre-wrap; word-break: break-word; background: #f8f9fa; padding: 1rem; border-radius: 4px; }
+    .six-minute-english .back { display: inline-block; margin-bottom: 1rem; }
   </style>
 </head>
 <body>
   <article class="six-minute-english">
+    <a class="back" href="{{ "/6-minute-english/" | relURL }}">&larr; 6 Minute English</a>
     <header>
       <h1>{{ .Title }}</h1>
       {{ with .Date }}<time datetime="{{ .Format "2006-01-02" }}">{{ .Format "2 January 2006" }}</time>{{ end }}
@@ -28,18 +28,7 @@
       {{ end }}
     </header>
 
-    <section class="audio">
-      {{ .Content }}
-    </section>
-
-    <section class="transcript">
-      <h2>Transcript</h2>
-      {{ with .Resources.GetMatch "transcript.txt" }}
-        <pre class="transcript-text">{{ .Content }}</pre>
-      {{ else }}
-        <pre class="transcript-text">{{ .RawContent }}</pre>
-      {{ end }}
-    </section>
+    {{ .Content }}
   </article>
 </body>
 </html>

@@ -33,32 +33,69 @@ pnpm dev
 
 ## Hugo 集成
 
-`tmp/<ep-YYMMDD>/` 是一个 Hugo page bundle。可将该目录复制到 Hugo 站点的 `content/6-minute-english/` 下。
+这些内容作为一个**独立的 section** 放在 `/6-minute-english/`，与你的技术博客（`content/posts/`）完全分开，使用独立的 layout，不会影响博客原本风格。
 
-### 所需文件（已提供）
-
-本项目在 `hugo/` 目录下提供了最小可用的模板：
-
-- `hugo/layouts/shortcodes/audio.html` — `audio` shortcode，支持 page resource 播放
-- `hugo/layouts/6-minute-english/single.html` — `6-minute-english` 类型的 single layout（渲染标题、日期、PDF 下载、audio shortcode、Transcript）
-
-### 放置位置
-
-将这些文件复制到你的 Hugo 站点根目录：
+目录结构（Hugo 站点）：
 
 ```
 <your-hugo-site>/
+  content/
+    6-minute-english/          <- 独立 section（一个独立 page）
+      _index.md                <- section 列表页（只需创建一次）
+      ep-261008/               <- 每期内容（脚本每天生成，复制进来即可）
+        index.md
+        audio.mp3
+        transcript.pdf
+        transcript.txt
+        meta.json
   layouts/
     shortcodes/
-      audio.html        -> 复制自 hugo/layouts/shortcodes/audio.html
+      audio.html
     6-minute-english/
-      single.html       -> 复制自 hugo/layouts/6-minute-english/single.html
+      list.html                <- section 列表页 layout
+      single.html              <- 每期内容 layout
 ```
+
+### 所需文件（已提供）
+
+本项目在 `hugo/` 目录下已提供全部文件：
+
+- `hugo/content/6-minute-english/_index.md` — section 首页（列表页）
+- `hugo/layouts/6-minute-english/list.html` — 列表 layout
+- `hugo/layouts/6-minute-english/single.html` — 详情 layout
+- `hugo/layouts/shortcodes/audio.html` — `audio` shortcode（page resource 播放）
+
+### 放置位置
+
+把 `hugo/` 下的文件对应复制到你 Hugo 站点根目录：
+
+```
+hugo/content/6-minute-english/_index.md  ->  <site>/content/6-minute-english/_index.md
+hugo/layouts/6-minute-english/list.html   ->  <site>/layouts/6-minute-english/list.html
+hugo/layouts/6-minute-english/single.html ->  <site>/layouts/6-minute-english/single.html
+hugo/layouts/shortcodes/audio.html        ->  <site>/layouts/shortcodes/audio.html
+```
+
+然后每天把脚本生成的 `tmp/<ep-YYMMDD>/` 整个复制到 `<site>/content/6-minute-english/`。
+
+### 添加后直接可见
+
+- 把新的 `ep-YYMMDD/` 目录放进 `content/6-minute-english/` 后，`/6-minute-english/` 列表页会**自动**出现该条目（Hugo 按 section 下所有子页面自动生成列表），无需手动维护列表。
+- 列表按日期倒序（`ByDate.Reverse`），所以最新一期在最上面。
+- 想放进站点的导航菜单，可在 `_index.md` 的 front matter 里加：
+
+  ```yaml
+  menu:
+    main:
+      name: "6 Minute English"
+      weight: 10
+  ```
 
 ### 注意
 
 - `index.md` 已在 body 中使用 `{{< audio src="audio.mp3" >}}`，因此需要 `audio` shortcode 存在。
-- `type: "6-minute-english"` 对应 `layouts/6-minute-english/single.html`；如果不使用此 layout，Hugo 将回退到 `_default/single.html`。
+- `_index.md` 中用 `cascade` 给所有子页面设置 `type: "6-minute-english"`，即使某期 front matter 漏写 type 也会使用该 layout。
+- `type: "6-minute-english"` 对应 `layouts/6-minute-english/single.html`；如果不想用此 layout，Hugo 会回退到 `_default/single.html`。
 - Transcript 可从 `transcript.txt`（纯文本）或 `transcript.pdf` 获取；`index.md` body 中也包含了格式化的 Markdown 版。
 
 ## 定时运行（建议）
@@ -71,6 +108,7 @@ pnpm dev
 
 ## 说明
 
-- 日期从 episode code（`ep-YYMMDD`）推导：`261008 → 2026-10-08T00:00:00Z`
+- `index.md` 的 `date` 使用**生成时间**（脚本运行/创建当前页面时），不是网站内容日期。
+- `meta.json` 中的 `date` 为节目日期，由 episode code 推导：`261008 → 2026-10-08T00:00:00Z`。
 - Transcript 提取基于页面富文本结构，依赖 `not a word-for-word transcript` 标记及结束标记（`What do you think of the new version` 或 `learningenglish@bbc.co.uk`）；如页面结构变化可能需微调。
 - 仅抓取内容列表首个条目（即当前最新一期）。
