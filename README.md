@@ -102,6 +102,34 @@ hugo/static/robots.txt                   ->  <site>/static/robots.txt  （可选
 - `type: "6-minute-english"` 对应 `layouts/6-minute-english/single.html`；如果不想用此 layout，Hugo 会回退到 `_default/single.html`。
 - Transcript 可从 `transcript.txt`（纯文本）或 `transcript.pdf` 获取；`index.md` body 中也包含了格式化的 Markdown 版。
 
+## 同步到另一个 GitHub 仓库（自动部署）
+
+脚本每次执行后，可选地把生成的 `tmp/<ep-YYMMDD>/` 内容同步到**另一个 Hugo 仓库**的指定目录，并直接提交到目标分支（默认 `main`）。目标仓库更新后即可自动触发 Netlify 构建。
+
+### 配置
+
+复制 `.env.example` 为 `.env` 并填写：
+
+```dotenv
+GIT_SYNC_ENABLED=true
+GIT_SYNC_REPO=git@github.com:user/hugo-site.git
+GIT_SYNC_BRANCH=main
+GIT_SYNC_CONTENT_DIR=content/6-minute-english
+# GIT_SYNC_WORKDIR=tmp/.sync-repo
+# GIT_SYNC_TOKEN=            # HTTPS 仓库专用
+# GIT_SYNC_COMMIT_NAME=bot
+# GIT_SYNC_COMMIT_EMAIL=bot@example.com
+```
+
+说明：
+
+- `GIT_SYNC_REPO`：目标仓库（SSH 或 HTTPS）。SSH 方式依赖本机 SSH key / ssh-agent；HTTPS 方式可配 `GIT_SYNC_TOKEN`。
+- 同步会把 `tmp/<ep-YYMMDD>/` 下的文件写入目标仓库的 `<GIT_SYNC_CONTENT_DIR>/<ep-YYMMDD>/`。
+- 目录**已存在则覆盖更新**（例如重跑同一天），随后提交并 push 到目标分支，无变化时不会产生提交。
+- `GIT_SYNC_WORKDIR` 是本地缓存的克隆目录（默认 `tmp/.sync-repo`，已被 `.gitignore` 忽略）。
+
+> 注意：`index.md` 的 `date` 为脚本运行时间，因此**每天运行都会更新该字段并生成一次提交**（进而触发一次 Netlify 构建）。若只想在新一期发布时提交，可在 cron 中判断是否出现新目录，或改为使用节目日期。
+
 ## 定时运行（建议）
 
 每天运行一次即可获取最新一期。可配合 cron：
@@ -112,6 +140,7 @@ hugo/static/robots.txt                   ->  <site>/static/robots.txt  （可选
 
 ## 说明
 
+- `index.md` 的 front matter 使用 **TOML**（`+++` 包裹），字段包含 `title`、`date`、`type`、`slug`、`episode_id`、`original_address`、`audio`、`transcript`、`transcript_pdf` 等。
 - `index.md` 的 `date` 使用**生成时间**（脚本运行/创建当前页面时），不是网站内容日期。
 - `meta.json` 中的 `date` 为节目日期，由 episode code 推导：`261008 → 2026-10-08T00:00:00Z`。
 - Transcript 提取基于页面富文本结构，依赖 `not a word-for-word transcript` 标记及结束标记（`What do you think of the new version` 或 `learningenglish@bbc.co.uk`）；如页面结构变化可能需微调。
