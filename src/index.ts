@@ -202,8 +202,9 @@ function buildIndexMd(episode: {
     ? baseSlug
     : `${baseSlug}-${episode.episodeCode}`;
 
+  const now = new Date().toISOString();
   const lines: string[] = [];
-  lines.push("+++", "title = " + toTomlString(episode.title), "date = " + toTomlString(new Date().toISOString()), 'type = "6-minute-english"', "draft = false", 'categories = ["English", "6 Minute English"]', 'tags = ["bbc", "listening", "vocabulary", "6-minute-english"]', "slug = " + toTomlString(slug), "episode_id = " + toTomlString(episode.episodeCode), "original_address = " + toTomlString(episode.originalAddress), 'audio = "audio.mp3"', 'transcript = "transcript.txt"', 'transcript_pdf = "transcript.pdf"', "+++", "");
+  lines.push("+++", "title = " + toTomlString(episode.title), "date = " + toTomlString(now), "lastmod = " + toTomlString(now), 'type = "6-minute-english"', "draft = false", 'categories = ["English", "6 Minute English"]', 'tags = ["bbc", "listening", "vocabulary", "6-minute-english"]', "slug = " + toTomlString(slug), "episode_id = " + toTomlString(episode.episodeCode), "original_address = " + toTomlString(episode.originalAddress), 'audio = "audio.mp3"', 'transcript = "transcript.txt"', 'transcript_pdf = "transcript.pdf"', "+++", "");
 
   const body = [
     `{{< audio src="audio.mp3" >}}`,
