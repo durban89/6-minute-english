@@ -27,6 +27,8 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
+        env:
+          PNPM_ONLY_BUILT_DEPENDENCIES: ""
 
       - name: Run Scraper and Sync
         run: pnpm start
