@@ -1,0 +1,40 @@
+name: Auto Scrape 6 Minute English
+
+on:
+  schedule:
+    # Runs daily at 09:30 AM Beijing Time (01:30 AM UTC)
+    - cron: '30 1 * * *'
+  workflow_dispatch: # Allows you to manually trigger the workflow from the Actions tab
+
+jobs:
+  scrape_and_sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run Scraper and Sync
+        run: pnpm start
+        env:
+          GIT_SYNC_ENABLED: "true"
+          GIT_SYNC_REPO: "https://github.com/durban89/zhangdapeng.dev.git"
+          GIT_SYNC_BRANCH: "main"
+          GIT_SYNC_CONTENT_DIR: "content/6-minute-english"
+          GIT_SYNC_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GIT_SYNC_COMMIT_NAME: "durban89"
+          GIT_SYNC_COMMIT_EMAIL: "zhangdapeng89@126.com"
