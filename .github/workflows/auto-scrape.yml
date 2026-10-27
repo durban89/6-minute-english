@@ -37,6 +37,6 @@ jobs:
           GIT_SYNC_REPO: "https://github.com/durban89/zhangdapeng.dev.git"
           GIT_SYNC_BRANCH: "main"
           GIT_SYNC_CONTENT_DIR: "content/6-minute-english"
-          GIT_SYNC_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GIT_SYNC_TOKEN: ${{ secrets.SYNC_TOKEN }}
           GIT_SYNC_COMMIT_NAME: "durban89"
           GIT_SYNC_COMMIT_EMAIL: "zhangdapeng89@126.com"
